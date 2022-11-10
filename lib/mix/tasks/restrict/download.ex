@@ -9,6 +9,14 @@ defmodule Mix.Tasks.Restrict.Download do
   use Mix.Task
 
   def run(binstring) do
+    file_locations = [
+      "pub/rebase/emboss_e.###",
+      "pub/rebase/emboss_s.###",
+      "pub/rebase/emboss_r.###",
+      "pub/rebase/bairoch.###"
+    ]
+    Enum.map(file_locations, fn loc -> "ftp://ftp.neb.com/" <> loc)
+
     IO.inspect(binstring)
   end
 end
