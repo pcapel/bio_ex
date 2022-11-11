@@ -5,7 +5,7 @@ defmodule Mix.Tasks.Restrict.Download do
   These are used to generate the restriction enzyme data
   """
 
-  @shortdoc "Task for downloading RE data"
+  @shortdoc "Downloading restriction enzyme data"
   use Mix.Task
 
   def run(_) do
