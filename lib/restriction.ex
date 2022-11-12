@@ -1,6 +1,6 @@
-defmodule Restrict do
+defmodule Bio.Restriction do
   @moduledoc """
-  Documentation for `Restrict`.
+  Documentation for `Restriction`.
   """
 
   @doc """
@@ -8,7 +8,7 @@ defmodule Restrict do
 
   ## Examples
 
-      iex> Restrict.hello()
+      iex> Restriction.hello()
       :world
 
   """
