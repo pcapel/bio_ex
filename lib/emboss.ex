@@ -3,10 +3,10 @@ defmodule Bio.Rebase.Emboss do
     root = file_path |> Path.basename() |> Path.rootname()
 
     case root do
-      "download_emboss_e" -> parse_information(file_path)
-      "download_emboss_r" -> parse_references(file_path)
-      "download_emboss_s" -> parse_suppliers(file_path)
-      _ -> IO.puts("Unknown file #{file_path}")
+      "downloads_emboss_e" -> parse_information(file_path)
+      "downloads_emboss_r" -> parse_references(file_path)
+      "downloads_emboss_s" -> parse_suppliers(file_path)
+      _ -> IO.puts("Emboss module cannot parse #{file_path}")
     end
   end
 

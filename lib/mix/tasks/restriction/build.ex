@@ -41,17 +41,22 @@ defmodule Mix.Tasks.Restriction.Build do
   @shortdoc "Task for populating RE data"
   use Mix.Task
 
-  def run(_binstring) do
+  def run(inputs) do
+    [base_dir | _rest] = inputs
+
+    IO.puts("Building restriction data")
+
     [
-      "/Users/philip/open_source/restrict_ex/test/files/download_emboss_e",
-      "/Users/philip/open_source/restrict_ex/test/files/download_emboss_r",
-      "/Users/philip/open_source/restrict_ex/test/files/download_emboss_s"
+      "#{base_dir}/downloads_emboss_e",
+      "#{base_dir}/downloads_emboss_r",
+      "#{base_dir}/downloads_emboss_s"
     ]
     |> Enum.map(&Bio.Rebase.Emboss.parse/1)
     |> write_module
   end
 
   defp write_module(data) do
+    IO.puts("Writing module...")
     [enzyme_patterns, enzyme_info, _suppliers] = data
     patts = list_to_map(enzyme_patterns, :name)
     info = list_to_map(enzyme_info, :enzyme_name)
@@ -79,6 +84,7 @@ defmodule Mix.Tasks.Restriction.Build do
     )
 
     Mix.Task.run("format")
+    IO.puts("Module written, formatted, and ready for release.")
   end
 
   defp list_to_map(list_of_maps, key) do
