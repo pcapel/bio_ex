@@ -31,6 +31,32 @@ defmodule Mix.Tasks.Restriction.Build do
   }
   ```
 
+  ``` elixir
+  defstruct Bpu10I name: "Bpu10I",
+        isoschizomers: "",
+        methylation: "?(5)",
+        organism_name: "Bacillus pumilus 10",
+        references: [
+          "Dedkov, V.S., Gonchar, D.A., Abdurashitov, M.A., Udalyeva, S.G., Urumceva, L.A., Chernukhin, V.A., Mutylo, G.V., Degtyarev, S.K., (2015) Res. J. Pharm. Biol. Chem. Sci., vol. 6, pp. 1341-1348.",
+          "Degtyarev, S.K., Zilkin, P.A., Prihodko, G.G., Repin, V.E., Rechkunova, N.I., (1989) Mol. Biol. (Mosk), vol. 23, pp. 1051-1056.",
+          "Flodman, K., Xu, S.-Y., Unpublished observations.",
+          "Stankevicius, K., Lubys, A., Timinskas, A., Vaitkevicius, D., Janulaitis, A., (1998) Nucleic Acids Res., vol. 26, pp. 1084-1091."
+        ],
+        source: "NEB 1777",
+        suppliers: ["B", "I", "N", "V"],
+        blunt?: false,
+        cut_1: 2,
+        cut_2: 5,
+        cut_3: 0,
+        cut_4: 0,
+        length: 7,
+        name: "Bpu10I",
+        number_cuts: 2,
+        pattern: "cctnagc"
+  ```
+
+  `
+
   What I'm thinking is that we have a module that declares each of these as
   data, then a primary module of functions that act on the assumption of data
   structures. We can have any number of overloaded functions that simply expect
@@ -46,37 +72,28 @@ defmodule Mix.Tasks.Restriction.Build do
 
     IO.puts("Building restriction data")
 
-    [
+    Bio.Rebase.Emboss.parse(
       "#{base_dir}/downloads_emboss_e",
       "#{base_dir}/downloads_emboss_r",
       "#{base_dir}/downloads_emboss_s"
-    ]
-    |> Enum.map(&Bio.Rebase.Emboss.parse/1)
+    )
     |> write_module
   end
 
   defp write_module(data) do
     IO.puts("Writing module...")
-    [enzyme_patterns, enzyme_info, _suppliers] = data
-    patts = list_to_map(enzyme_patterns, :name)
-    info = list_to_map(enzyme_info, :enzyme_name)
-
-    if Enum.count(patts) != Enum.count(info) do
-      Logger.error("The information from emboss_e and emboss_r do not align!")
-      System.stop(1)
-    end
 
     File.write(
       "lib/enzymes.ex",
       ~s"""
       # This module is generated using mix restriction.build
       # Do not modify this file directly
-      defmodule Bio.Restriction.Enzymes do
-      #{patts
-      |> Enum.reduce(%{}, fn {key, content}, acc -> Map.put(acc, key, %{pattern: content, info: Map.get(info, key)}) end)
-      |> Enum.map(fn {key, value} -> ~s"""
-        def #{key |> String.downcase() |> String.replace("-", "_")} do
-        #{stringify(value)}
+      defmodule Bio.Restriction.Enzyme do
+      defstruct #{to_source(Enum.at(data, 0))}
+      #{data
+      |> Enum.map(fn enzyme_map -> ~s"""
+        def #{Map.get(enzyme_map, :name) |> String.downcase() |> String.replace("-", "_")} do
+          %Bio.Restriction.Enzyme#{stringify(enzyme_map)}
         end
         """ end)}
       end
@@ -87,37 +104,62 @@ defmodule Mix.Tasks.Restriction.Build do
     IO.puts("Module written, formatted, and ready for release.")
   end
 
-  defp list_to_map(list_of_maps, key) do
-    list_of_maps
-    |> Enum.reduce(%{}, fn map, acc ->
-      Map.put(acc, Map.get(map, key), map)
-    end)
+  def to_source(enzyme_map) do
+    output =
+      enzyme_map
+      |> Enum.reduce("", fn {key, value}, final_str ->
+        final_str <> "#{key}: #{sourcify(value)},"
+      end)
+
+    String.slice(output, 0, String.length(output) - 1)
   end
 
+  # create a reasonable string representation of a map
   def stringify(obj) when is_map(obj) do
-    Enum.reduce(obj, "%{", fn {key, value}, acc ->
-      acc <> "#{key}: #{stringify(value)},\n"
-    end) <> "}"
-  end
+    final =
+      obj
+      |> Enum.reduce("{", fn {key, value}, str ->
+        str <> "#{key}: #{stringify(value)},"
+      end)
 
-  def stringify(obj) when is_list(obj) do
-    Enum.reduce(obj, "[", fn el, acc -> acc <> "#{stringify(el)}," end) <> "]"
-  end
-
-  def stringify(obj) when is_boolean(obj) do
-    "\"#{obj}\""
+    final <> "}"
   end
 
   def stringify(obj) when is_binary(obj) do
     "\"#{obj}\""
   end
 
-  def stringify(obj) when is_number(obj) do
-    "\"#{obj}\""
+  def stringify(obj) when is_list(obj) do
+    final =
+      Enum.reduce(obj, "[", fn el, acc ->
+        acc <> "#{stringify(el)},"
+      end)
+
+    final <> "]"
   end
 
-  def stringify(obj) when is_tuple(obj) do
-    str = Enum.reduce(obj, "{", fn el, acc -> acc <> "#{stringify(el)}," end)
-    String.slice(str, 0, String.length(str) - 1) <> "}"
+  def stringify(obj) when is_boolean(obj) do
+    "#{obj}"
+  end
+
+  def stringify(obj) when is_number(obj) do
+    "#{obj}"
+  end
+
+  # sourcify to default struct values
+  def sourcify(value) when is_binary(value) do
+    "\"\""
+  end
+
+  def sourcify(value) when is_list(value) do
+    "[]"
+  end
+
+  def sourcify(value) when is_boolean(value) do
+    "nil"
+  end
+
+  def sourcify(value) when is_number(value) do
+    "0"
   end
 end

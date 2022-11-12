@@ -1,17 +1,58 @@
 defmodule Bio.Rebase.Emboss do
-  def parse(file_path) do
-    root = file_path |> Path.basename() |> Path.rootname()
-
-    case root do
-      "downloads_emboss_e" -> parse_information(file_path)
-      "downloads_emboss_r" -> parse_references(file_path)
-      "downloads_emboss_s" -> parse_suppliers(file_path)
-      _ -> IO.puts("Emboss module cannot parse #{file_path}")
-    end
+  def parse(patterns_file, information_file, suppliers_file) do
+    [
+      parse_patterns(patterns_file),
+      parse_information(information_file),
+      parse_suppliers(suppliers_file)
+    ]
+    |> convolve()
   end
 
-  # REBASE enzyme information for EMBOSS (embossre.ref)
-  #
+  defp convolve(data) do
+    [patterns, info, suppliers] = data
+
+    # Patterns and info should have the same len, suppliers is just a map that
+    # we can use to replace the weird keys with actual values
+    patterns
+    |> Enum.map(fn pat_map ->
+      info_map =
+        Enum.find(info, fn inf_el ->
+          Map.get(inf_el, :enzyme_name) == Map.get(pat_map, :name)
+        end)
+
+      new = info_map |> Enum.reduce(%{}, fn {key, value}, inner -> Map.put(inner, key, value) end)
+      pat_map |> Enum.reduce(new, fn {key, value}, inner -> Map.put(inner, key, value) end)
+    end)
+    |> Enum.map(fn full_map ->
+      full_map
+      |> Enum.reduce(%{}, fn {key, value}, acc ->
+        case key do
+          # Drop the enzyme name in favor of simply name:
+          :enzyme_name ->
+            acc
+
+          # Drop the number of references since we don't need allocation
+          :number_of_references ->
+            acc
+
+          # Exchange references to suppliers codes with their names
+          :suppliers ->
+            Map.put(
+              acc,
+              key,
+              value
+              |> Enum.map(fn code ->
+                Map.get(suppliers, code)
+              end)
+            )
+
+          _ ->
+            Map.put(acc, key, value)
+        end
+      end)
+    end)
+  end
+
   # Format:
   # Line 1: Name of Enzyme
   # Line 2: Organism
@@ -22,7 +63,7 @@ defmodule Bio.Rebase.Emboss do
   # Line 7: Number of following references
   # Lines 8..n: References
   # // (end of entry marker)
-  defp parse_references(file) do
+  defp parse_information(file) do
     File.read!(file)
     |> split_newline()
     |> Enum.filter(&not_comment?/1)
@@ -50,6 +91,7 @@ defmodule Bio.Rebase.Emboss do
     end)
   end
 
+  # Format:
   # name<ws>pattern<ws>len<ws>ncuts<ws>blunt<ws>c1<ws>c2<ws>c3<ws>c4
   #
   # Where:
@@ -63,7 +105,7 @@ defmodule Bio.Rebase.Emboss do
   # c2 = First 3' cut
   # c3 = Second 5' cut
   # c4 = Second 3' cut
-  defp parse_information(file) do
+  defp parse_patterns(file) do
     File.read!(file)
     |> split_newline()
     |> Enum.filter(&not_comment?/1)
@@ -78,7 +120,7 @@ defmodule Bio.Rebase.Emboss do
     |> Enum.reduce(%{}, fn {el, idx}, acc ->
       case idx do
         1 -> Map.put(acc, :name, el)
-        2 -> Map.put(acc, :pattern, el)
+        2 -> Map.put(acc, :pattern, String.downcase(el))
         3 -> Map.put(acc, :length, String.to_integer(el))
         4 -> Map.put(acc, :number_cuts, String.to_integer(el))
         5 -> Map.put(acc, :blunt?, cast(el))
@@ -105,8 +147,6 @@ defmodule Bio.Rebase.Emboss do
     end
   end
 
-  # REBASE Supplier information for EMBOSS (embossre.sup)
-  #
   # Format:
   # Code of Supplier<ws>Supplier name
   defp parse_suppliers(file) do
