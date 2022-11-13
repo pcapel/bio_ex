@@ -35,6 +35,10 @@ defmodule Bio.Rebase.Emboss do
           :number_of_references ->
             acc
 
+          # This data isn't accurate, remove it
+          :isoschizomers ->
+            acc
+
           # Exchange references to suppliers codes with their names
           :suppliers ->
             Map.put(
