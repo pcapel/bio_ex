@@ -35,4 +35,21 @@ defmodule RestrictionTest do
 
     assert output == ["tagcctcttacgcacctgccctg", "cgcttaggacgatagttgagt"]
   end
+
+  @doc """
+  pattern: ggcc,
+  cut offset: -1,
+
+  tagcctcttacg ggcccctgcgcttaggacgatagttgagt
+             1 1234567
+
+  tagcctcttac gggcccctgcgcttaggacgatagttgagt
+  """
+  test "digest works with aoxi" do
+    output =
+      "tagcctcttacgggcccctgcgcttaggacgatagttgagt"
+      |> Bio.Restriction.digest(Bio.Restriction.Enzyme.aoxi())
+
+    assert output == ["tagcctcttac", "gggcccctgcgcttaggacgatagttgagt"]
+  end
 end
