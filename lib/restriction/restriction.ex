@@ -41,10 +41,11 @@ defmodule Bio.Restriction do
            pattern: pattern,
            cut_1: cut_site_offset,
            cut_2: _fst3,
-           cut_3: _scd5,
+           cut_3: second_cut,
            cut_4: _scd3
          } = enzyme
-       ) do
+       )
+       when second_cut == 0 do
     dna_segment_size = byte_size(right)
     restriction_pattern_size = byte_size(pattern)
 
