@@ -1,17 +1,28 @@
-# Restriction
+# Bio Ex
+
+Bioinformatics tools for Elixir.
+
+## Modules
+
+### Restriction
 
 An Elixir implementation for restriction enzyme data based on the REBASE
 database.
 
+### Sequence
+
+Sequence manipulations, validations and general IUPAC data.
+
 ## Installation
 
+(not just yet)
 If [available in Hex](https://hex.pm/docs/publish), the package can be installed
 by adding `restrict_ex` to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
   [
-    {:restrict_ex, "~> 0.1.0"}
+    {:bio_ex, "~> 0.1.0"}
   ]
 end
 ```
