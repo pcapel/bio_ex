@@ -31,24 +31,26 @@ defmodule Bio.Restriction do
          right,
          %Bio.Restriction.Enzyme{
            pattern: pattern,
-           cut_1: fst5,
+           cut_1: cut_site_offset,
            cut_2: _fst3,
            cut_3: _scd5,
            cut_4: _scd3
          } = enzyme
        ) do
-    current_size = byte_size(right)
-    p_size = byte_size(pattern)
+    dna_segment_size = byte_size(right)
+    restriction_pattern_size = byte_size(pattern)
 
     cond do
       # This is the base case, we can't reduce the sequence further
-      current_size <= p_size or current_size <= fst5 ->
+      dna_segment_size <= restriction_pattern_size or dna_segment_size <= cut_site_offset ->
         [left <> right]
 
-      current_size > p_size ->
-        cut_site = 1 + fst5
+      dna_segment_size > restriction_pattern_size ->
+        cut_site = 1 + cut_site_offset
         <<left_product::binary-size(cut_site), right_product::binary>> = right
-        <<uncut::binary-size(1), check::binary-size(p_size), remaining::binary>> = right
+
+        <<uncut::binary-size(1), check::binary-size(restriction_pattern_size), remaining::binary>> =
+          right
 
         cond do
           pattern == check and left <> left_product != "" ->
