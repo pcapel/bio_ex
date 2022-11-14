@@ -7371,30 +7371,6 @@ defmodule Bio.Restriction.Enzyme do
     }
   end
 
-  def hpyum037x do
-    %Bio.Restriction.Enzyme{
-      blunt?: false,
-      cut_1: 0,
-      cut_2: 0,
-      cut_3: 0,
-      cut_4: 0,
-      name: "HpyUM037X",
-      pattern: "gtggnag"
-    }
-  end
-
-  def hpyum037x do
-    %Bio.Restriction.Enzyme{
-      blunt?: false,
-      cut_1: 0,
-      cut_2: 0,
-      cut_3: 0,
-      cut_4: 0,
-      name: "HpyUM037X",
-      pattern: "tnggnag"
-    }
-  end
-
   def hsoii do
     %Bio.Restriction.Enzyme{
       blunt?: false,

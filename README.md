@@ -34,4 +34,3 @@ be found at [https://hexdocs.pm/restrict_ex](https://hexdocs.pm/restrict_ex).
 ## TODO
 
 - Handle double cutting
-- hpyum037x is duplicated

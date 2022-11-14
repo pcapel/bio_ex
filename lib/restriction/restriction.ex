@@ -7,8 +7,16 @@ defmodule Bio.Restriction do
   recursively breaking down a binary and checking to see if the pattern for a
   given enzyme exists within it.
 
-  It attempts to determine how the cutting will work based on the structure of
-  the data given to it. If there is only a
+  Restriction is also the namespace for `Enzyme`, where functions for accessing
+  all the downloaded restriction enzyme data lives. Inside of
+  `Bio.Restriction.Enzyme` there is a struct defined. Each method named in the
+  lowercase fashion of the restriction enzymes returns an instance of this
+  struct.
+
+  The enzyme HpyUM037X is removed from the set, since it has two conflicting
+  entries in the emboss data. If you can resolve this distinction, please feel
+  free to either contribute a fix, or open an issue that explains how one would
+  be implemented.
   """
 
   @doc """

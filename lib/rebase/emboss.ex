@@ -25,14 +25,22 @@ defmodule Bio.Rebase.Emboss do
       pat_map |> Enum.reduce(new, fn {key, value}, inner -> Map.put(inner, key, value) end)
     end)
     |> Enum.map(fn full_map ->
-      full_map
-      |> Enum.reduce(%{}, fn {key, value}, acc ->
-        cond do
-          key in @keep_elements -> Map.put(acc, key, value)
-          true -> acc
-        end
-      end)
+      cond do
+        # This data is confusing, and possibly wrong.
+        full_map.name in ["HpyUM037X"] ->
+          nil
+
+        true ->
+          full_map
+          |> Enum.reduce(%{}, fn {key, value}, acc ->
+            cond do
+              key in @keep_elements -> Map.put(acc, key, value)
+              true -> acc
+            end
+          end)
+      end
     end)
+    |> Enum.filter(&Function.identity/1)
   end
 
   # Format:
