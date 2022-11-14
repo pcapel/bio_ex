@@ -1,4 +1,5 @@
 defmodule Bio.Rebase.Emboss do
+  @keep_elements [:blunt?, :cut_1, :cut_2, :cut_3, :cut_4, :name, :pattern]
   def parse(patterns_file, information_file, suppliers_file) do
     [
       parse_patterns(patterns_file),
@@ -9,7 +10,7 @@ defmodule Bio.Rebase.Emboss do
   end
 
   defp convolve(data) do
-    [patterns, info, suppliers] = data
+    [patterns, info, _suppliers] = data
 
     # Patterns and info should have the same len, suppliers is just a map that
     # we can use to replace the weird keys with actual values
@@ -26,32 +27,9 @@ defmodule Bio.Rebase.Emboss do
     |> Enum.map(fn full_map ->
       full_map
       |> Enum.reduce(%{}, fn {key, value}, acc ->
-        case key do
-          # Drop the enzyme name in favor of simply name:
-          :enzyme_name ->
-            acc
-
-          # Drop the number of references since we don't need allocation
-          :number_of_references ->
-            acc
-
-          # This data isn't accurate, remove it
-          :isoschizomers ->
-            acc
-
-          # Exchange references to suppliers codes with their names
-          :suppliers ->
-            Map.put(
-              acc,
-              key,
-              value
-              |> Enum.map(fn code ->
-                Map.get(suppliers, code)
-              end)
-            )
-
-          _ ->
-            Map.put(acc, key, value)
+        cond do
+          key in @keep_elements -> Map.put(acc, key, value)
+          true -> acc
         end
       end)
     end)

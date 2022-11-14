@@ -2,65 +2,24 @@ require Logger
 
 defmodule Mix.Tasks.Restriction.Build do
   @moduledoc """
+  Module for building out the actual data structure that will be generated in
+  code.
 
-  This is a module that will populate the data... derta? Data!
+  Each enzyme will be defined as a struct under the `Bio.Restriction.Enzyme`
+  namespace. This struct will be populated with the minimal data needed for the
+  use in digestion and sequence validations.
 
-  The BioPython restriction enzyme dictionary format is as follows:
+  Further additions to the data can be requested by opening an issue.
 
-  ``` python
-    rest_dict["AanI"] = {
-      "charac": (3, -3, None, None, "TTATAA"),
-      "compsite": "(?=(?P<AanI>TTATAA))",
-      "dna": None,
-      "freq": 4096.0,
-      "fst3": -3,
-      "fst5": 3,
-      "id": 15358,
-      "inact_temp": 65,
-      "opt_temp": 37,
-      "ovhg": 0,
-      "ovhgseq": "",
-      "results": None,
-      "scd3": None,
-      "scd5": None,
-      "site": "TTATAA",
-      "size": 6,
-      "substrat": "DNA",
-      "suppl": ("B",),
-      "uri": "https://identifiers.org/rebase:15358",
-  }
-  ```
+  The current data preserved are:
 
-  ``` elixir
-  defstruct Bpu10I name: "Bpu10I",
-        isoschizomers: "",
-        methylation: "?(5)",
-        organism_name: "Bacillus pumilus 10",
-        references: [
-          "Dedkov, V.S., Gonchar, D.A., Abdurashitov, M.A., Udalyeva, S.G., Urumceva, L.A., Chernukhin, V.A., Mutylo, G.V., Degtyarev, S.K., (2015) Res. J. Pharm. Biol. Chem. Sci., vol. 6, pp. 1341-1348.",
-          "Degtyarev, S.K., Zilkin, P.A., Prihodko, G.G., Repin, V.E., Rechkunova, N.I., (1989) Mol. Biol. (Mosk), vol. 23, pp. 1051-1056.",
-          "Flodman, K., Xu, S.-Y., Unpublished observations.",
-          "Stankevicius, K., Lubys, A., Timinskas, A., Vaitkevicius, D., Janulaitis, A., (1998) Nucleic Acids Res., vol. 26, pp. 1084-1091."
-        ],
-        source: "NEB 1777",
-        suppliers: ["B", "I", "N", "V"],
-        blunt?: false,
-        cut_1: 2,
-        cut_2: 5,
-        cut_3: 0,
-        cut_4: 0,
-        length: 7,
-        name: "Bpu10I",
-        number_cuts: 2,
-        pattern: "cctnagc"
-  ```
-
-  `
-
-  What I'm thinking is that we have a module that declares each of these as
-  data, then a primary module of functions that act on the assumption of data
-  structures. We can have any number of overloaded functions that simply expect
-  certain shapes...
+  blunt?: boolean
+  cut_1: number
+  cut_2: number
+  cut_3: number
+  cut_4: number
+  name: string
+  pattern: string
 
   """
 
@@ -84,7 +43,7 @@ defmodule Mix.Tasks.Restriction.Build do
     IO.puts("Writing module...")
 
     File.write(
-      "lib/enzymes.ex",
+      "lib/restriction/enzymes.ex",
       ~s"""
       # This module is generated using mix restriction.build
       # Do not modify this file directly
