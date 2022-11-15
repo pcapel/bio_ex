@@ -12,6 +12,7 @@ defmodule Mix.Tasks.Bio.Random.Dna do
 
   @shortdoc "Generate random dna sequences"
   use Mix.Task
+  alias Bio.Ansio, as: Ansio
 
   @options [
     seed: :integer,
@@ -22,9 +23,7 @@ defmodule Mix.Tasks.Bio.Random.Dna do
   ]
 
   def run(options) do
-    {opts, _, _} =
-      OptionParser.parse(options, strict: @options)
-      |> IO.inspect()
+    {opts, _, _} = OptionParser.parse(options, strict: @options)
 
     case {opts[:algorithm], opts[:seed]} do
       {nil, nil} -> nil
@@ -35,13 +34,13 @@ defmodule Mix.Tasks.Bio.Random.Dna do
 
     case {opts[:seq_count], opts[:seq_size]} do
       {nil, nil} ->
-        report_error("Please provide options for seq-size and seq-count")
+        Ansio.error("Please provide options for seq-size and seq-count")
 
       {_, nil} ->
-        report_error("Please provide options for seq-count")
+        Ansio.error("Please provide options for seq-count")
 
       {nil, _} ->
-        report_error("Please provide options for seq-size")
+        Ansio.error("Please provide options for seq-size")
 
       {count, size} ->
         File.write(
@@ -59,10 +58,5 @@ defmodule Mix.Tasks.Bio.Random.Dna do
           end)
         )
     end
-  end
-
-  defp report_error(msg) do
-    (IO.ANSI.red() <> "⚠️ #{msg} ⚠️" <> IO.ANSI.reset())
-    |> IO.puts()
   end
 end
