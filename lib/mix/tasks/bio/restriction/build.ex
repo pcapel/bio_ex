@@ -1,6 +1,4 @@
-require Logger
-
-defmodule Mix.Tasks.Restriction.Build do
+defmodule Mix.Tasks.Bio.Restriction.Build do
   @moduledoc """
   Module for building out the actual data structure that will be generated in
   code.

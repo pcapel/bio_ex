@@ -1,4 +1,4 @@
-defmodule Mix.Tasks.Restriction.Update do
+defmodule Mix.Tasks.Bio.Restriction.Update do
   @moduledoc """
   Update the library of restriction enzymes according to REBASE data.
   """

@@ -1,4 +1,4 @@
-defmodule Mix.Tasks.Restriction.Download do
+defmodule Mix.Tasks.Bio.Restriction.Download do
   @moduledoc """
   This runs a series of downloads to get the relevant files from REBASE
 

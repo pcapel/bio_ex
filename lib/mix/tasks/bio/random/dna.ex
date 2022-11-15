@@ -21,9 +21,16 @@ defmodule Mix.Tasks.Bio.Random.Dna do
     seq_size: :integer,
     seq_count: :integer
   ]
+  @aliases [
+    s: :seed,
+    a: :algorithm,
+    f: :outfile,
+    z: :seq_size,
+    c: :seq_count
+  ]
 
   def run(options) do
-    {opts, _, _} = OptionParser.parse(options, strict: @options)
+    {opts, _, _} = OptionParser.parse(options, aliases: @aliases, strict: @options)
 
     case {opts[:algorithm], opts[:seed]} do
       {nil, nil} -> nil

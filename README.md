@@ -13,6 +13,53 @@ database.
 
 Sequence manipulations, validations and general IUPAC data.
 
+## Tasks
+
+### bio.restriction.\*
+
+#### update
+
+Download and build the restriction enzymes using the REBASE Emboss files.
+
+Parameters:
+
+- `--email/-p`: email to use as password for the FTP of REBASE files
+- `--cache-dir/-d`: directory to look for and store the emboss files
+
+#### download
+
+Download the REBASE emboss files. If the files exist in `--cache-dir`, then the
+download will be skipped.
+
+Parameters:
+
+- `--email/-p`: email to use as password for the FTP of REBASE files
+- `--cache-dir/-d`: directory to look for and store the emboss files
+
+#### build
+
+Generate `Bio.Restriction.Enzyme` module content from the REBASE emboss files
+using the `Bio.Rebase.Emboss.parse/1` function.
+
+Parameters:
+
+- `--cache-dir/-d`: directory to look the emboss files
+
+### bio.random
+
+#### dna
+
+Generate a number of random DNA sequences. See [Erlang](https://www.erlang.org/doc/man/random.html) docs to understand the
+available options for algorithms.
+
+Parameters:
+
+- `--seed/-s`: seed value for the RNG (defaults to `:random` defaults)
+- `--algorithm/-a`: algorithm value for the RNG (defaults to `:exsss`)
+- `--outfile/-f`: path for output to be loaded (required)
+- `--seq-size/-z`: size for the generated sequence in nucleotides (required)
+- `--seq-count/-c`: number of sequences to generate (required)
+
 ## Installation
 
 (not just yet)
