@@ -1,4 +1,18 @@
 defmodule Mix.Tasks.Bio.Random.Dna do
+  @moduledoc """
+  Bio.Random.Dna will generate random sequences of DNA based on the given
+  arguments:
+
+  seed - RNG seed (defaults to RNG default seeding)
+  algorithm - RNG algorithm (defaults to exsss)
+  seq-count - integer number of sequences to generate (required)
+  seq-size - integer size of sequence to generate (required)
+  outfile - output filename or path (required)
+  """
+
+  @shortdoc "Generate random dna sequences"
+  use Mix.Task
+
   @options [
     seed: :integer,
     algorithm: :string,
