@@ -25,11 +25,19 @@ defmodule Mix.Tasks.Restriction.Build do
 
   @shortdoc "Task for populating RE data"
   use Mix.Task
+  alias Bio.Ansio, as: Ansio
+  @options [cache_dir: :string]
+  @aliases [d: :cache_dir]
 
   def run(inputs) do
-    [base_dir | _rest] = inputs
+    {opts, _, _} = OptionParser.parse(inputs, aliases: @aliases, strict: @options)
+    Ansio.info("Building restriction data")
 
-    IO.puts("Building restriction data")
+    base_dir =
+      cond do
+        opts[:cache_dir] == nil -> :filename.basedir(:user_cache, "RestrictionEx")
+        true -> opts[:cache_dir]
+      end
 
     Bio.Rebase.Emboss.parse(
       "#{base_dir}/downloads_emboss_e",
@@ -40,7 +48,7 @@ defmodule Mix.Tasks.Restriction.Build do
   end
 
   defp write_module(data) do
-    IO.puts("Writing module...")
+    Ansio.info("Writing module...")
 
     File.write(
       "lib/restriction/enzymes.ex",
@@ -60,7 +68,7 @@ defmodule Mix.Tasks.Restriction.Build do
     )
 
     Mix.Task.run("format")
-    IO.puts("Module written, formatted, and ready for release.")
+    Ansio.success("Module written, formatted, and ready for release.")
   end
 
   def to_source(enzyme_map) do

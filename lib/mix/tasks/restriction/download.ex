@@ -10,10 +10,22 @@ defmodule Mix.Tasks.Restriction.Download do
 
   @shortdoc "Downloading restriction enzyme data"
   use Mix.Task
+  alias Bio.Ansio, as: Ansio
 
-  # TODO: use OptionParser and clean up the way this works
+  @options [email: :string, cache_dir: :string]
+  @aliases [p: :email, d: :cache_dir]
+
   def run(inputs) do
-    [pass, cache_dir] = inputs
+    {opts, _, _} =
+      OptionParser.parse(inputs, aliases: @aliases, strict: @options)
+      |> IO.inspect()
+
+    cache_dir =
+      cond do
+        opts[:cache_dir] == nil -> :filename.basedir(:user_cache, "RestrictionEx")
+        true -> opts[:cache_dir]
+      end
+
     :ok = File.mkdir_p(cache_dir)
 
     host = "ftp.neb.com"
@@ -21,8 +33,8 @@ defmodule Mix.Tasks.Restriction.Download do
     term = "#{String.slice("#{date.year}", 3, 99)}#{date.month}"
 
     :ftp.start()
-    {:ok, pid} = :ftp.start_service(host: host |> String.to_charlist())
-    :ok = :ftp.user(pid, 'anonymous', ~c(#{pass}))
+    {:ok, pid} = :ftp.open(host |> String.to_charlist())
+    :ok = :ftp.user(pid, 'anonymous', ~c(#{opts[:email]}))
 
     [
       "pub/rebase/emboss_e.",
@@ -38,14 +50,15 @@ defmodule Mix.Tasks.Restriction.Download do
       cond do
         File.exists?(full_path) ->
           :ok
-          IO.puts("Skipping download of #{full_path}")
+          Ansio.info("Skipping download of #{full_path}")
 
         true ->
           :ok = :ftp.recv(pid, ~c(#{path}), "#{cache_dir}/downloads_" <> target_filename)
       end
     end)
 
-    :ftp.stop_service(pid)
+    :ftp.close(pid)
     :ftp.stop()
+    Ansio.info("Download complete")
   end
 end

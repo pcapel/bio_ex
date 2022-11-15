@@ -5,28 +5,34 @@ defmodule Mix.Tasks.Restriction.Update do
 
   @shortdoc "Download and Update restriction enzyme data"
   use Mix.Task
+  @options [email: :string, cache_dir: :string]
+  @aliases [p: :email, d: :cache_dir]
 
-  # TODO: use OptionParser and clean up the way this works
   def run(inputs) do
+    {opts, _, _} = OptionParser.parse(inputs, aliases: @aliases, strict: @options)
+
+    base_dir =
+      if opts[:cache_dir] == nil do
+        :filename.basedir(:user_cache, "RestrictionEx")
+      else
+        opts[:cache_dir]
+      end
+
     cond do
-      inputs == [] ->
+      opts[:email] == nil ->
         Mix.Task.run("restriction.download", [
+          "-p",
           IO.gets("Email: ")
           |> String.trim(),
-          :filename.basedir(:user_cache, "RestrictionEx")
+          "-d",
+          base_dir
         ])
 
-        Mix.Task.run("restriction.build", [
-          :filename.basedir(
-            :user_cache,
-            "RestrictionEx"
-          )
-        ])
+        Mix.Task.run("restriction.build", ["-d", base_dir])
 
       true ->
-        [_email, base_dir] = inputs
-        Mix.Task.run("restriction.download", inputs)
-        Mix.Task.run("restriction.build", [base_dir])
+        Mix.Task.run("restriction.download", ["-p", opts[:email], "-d", base_dir])
+        Mix.Task.run("restriction.build", ["-d", base_dir])
     end
   end
 end
