@@ -7,7 +7,9 @@ defmodule Bio.MixProject do
       version: "0.1.0",
       elixir: "~> 1.12",
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      name: "bio_ex",
+      package: package()
     ]
   end
 
@@ -19,5 +21,25 @@ defmodule Bio.MixProject do
 
   defp deps do
     []
+  end
+
+  defp package() do
+    [
+      files: ~w(
+        lib
+        priv
+        .formatter.exs
+        mix.exs
+        README*
+        readme*
+        LICENSE*
+        license*
+        CHANGELOG*
+        changelog*
+        src
+      ),
+      licenses: ["BSD3"],
+      links: %{"GitHub" => "https://github.com/pcapel/bio_ex"}
+    ]
   end
 end
