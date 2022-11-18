@@ -20,7 +20,7 @@ defmodule Mix.Tasks.Bio.Restriction.Update do
 
     cond do
       opts[:email] == nil ->
-        Mix.Task.run("restriction.download", [
+        Mix.Task.run("bio.restriction.download", [
           "-p",
           IO.gets("Email: ")
           |> String.trim(),
@@ -28,11 +28,11 @@ defmodule Mix.Tasks.Bio.Restriction.Update do
           base_dir
         ])
 
-        Mix.Task.run("restriction.build", ["-d", base_dir])
+        Mix.Task.run("bio.restriction.build", ["-d", base_dir])
 
       true ->
-        Mix.Task.run("restriction.download", ["-p", opts[:email], "-d", base_dir])
-        Mix.Task.run("restriction.build", ["-d", base_dir])
+        Mix.Task.run("bio.restriction.download", ["-p", opts[:email], "-d", base_dir])
+        Mix.Task.run("bio.restriction.build", ["-d", base_dir])
     end
   end
 end

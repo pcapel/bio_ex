@@ -1,4 +1,6 @@
 defmodule Bio.Ansio do
+  @moduledoc false
+
   def error(msg) do
     "⚠️⚠️⚠️ #{msg} "
     |> as(:red)

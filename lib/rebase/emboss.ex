@@ -1,4 +1,6 @@
 defmodule Bio.Rebase.Emboss do
+  @moduledoc false
+
   @keep_elements [:blunt?, :cut_1, :cut_2, :cut_3, :cut_4, :name, :pattern]
   def parse(patterns_file, information_file, suppliers_file) do
     [

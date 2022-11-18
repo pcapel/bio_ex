@@ -51,12 +51,25 @@ defmodule Mix.Tasks.Bio.Restriction.Build do
     File.write(
       "lib/restriction/enzymes.ex",
       ~s"""
-      # This module is generated using mix restriction.build
-      # Do not modify this file directly
+      # DO NOT MODIFY THIS FILE DIRECTLY
+      # This module is generated using `mix bio.restriction.build`
+      # Or with `mix bio.restriction.update`
+      # Data herein is derived from the REBASE database monthly data files:
+      # http://rebase.neb.com/rebase/rebase.files.html
+
       defmodule Bio.Restriction.Enzyme do
+      @moduledoc \"\"\"
+      Bio.Restriction.Enzyme houses all of the functions for accessing a struct
+      of restriction enzyme data, the Bio.Restriction.Enzyme.
+
+      All functions are the name of the enzyme in lowercase, where any `-`
+      characters have been made `_`. By example, "BsmBI" would be `bsmbi` or
+      "CviKI-1" would become `cviki_1`.
+      \"\"\"
       defstruct #{to_source(Enum.at(data, 0))}
       #{data
       |> Enum.map(fn enzyme_map -> ~s"""
+        @doc false
         def #{Map.get(enzyme_map, :name) |> String.downcase() |> String.replace("-", "_")} do
           %Bio.Restriction.Enzyme#{stringify(enzyme_map)}
         end
