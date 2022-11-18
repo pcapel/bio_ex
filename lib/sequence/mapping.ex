@@ -15,8 +15,8 @@ defmodule Bio.Sequence.Mapping do
 
   ## Example
 
-    iex> Map.get(Bio.Sequence.Mapping.nucleotide_to_name, "a")
-    "adenine"
+      iex> Map.get(Bio.Sequence.Mapping.nucleotide_to_name, "a")
+      "adenine"
   """
   def nucleotide_to_name do
     %{
@@ -33,8 +33,8 @@ defmodule Bio.Sequence.Mapping do
 
   ## Example
 
-    iex> Map.get(Bio.Sequence.Mapping.dna_complement, "a")
-    "t"
+      iex> Map.get(Bio.Sequence.Mapping.dna_complement, "a")
+      "t"
 
   """
   def dna_complement do
@@ -51,8 +51,8 @@ defmodule Bio.Sequence.Mapping do
 
   ## Example
 
-    iex> Map.get(Bio.Sequence.Mapping.rna_complement, "u")
-    "a"
+      iex> Map.get(Bio.Sequence.Mapping.rna_complement, "u")
+      "a"
 
   """
   def rna_complement do
@@ -70,8 +70,8 @@ defmodule Bio.Sequence.Mapping do
 
   ## Example
 
-    iex> Map.get(Bio.Sequence.Mapping.dna_ambiguous, "b")
-    ["c", "g", "t"]
+      iex> Map.get(Bio.Sequence.Mapping.dna_ambiguous, "b")
+      ["c", "g", "t"]
 
   """
   def dna_ambiguous do

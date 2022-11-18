@@ -6,12 +6,16 @@
 
 defmodule Bio.Restriction.Enzyme do
   @moduledoc """
-  Bio.Restriction.Enzyme houses all of the functions for accessing a struct
-  of restriction enzyme data, the Bio.Restriction.Enzyme.
+  This module houses all of the functions for accessing a struct
+  of restriction enzyme data, the `%Bio.Restriction.Enzyme`.
 
   All functions are the name of the enzyme in lowercase, where any `-`
   characters have been made `_`. By example, "BsmBI" would be `bsmbi` or
   "CviKI-1" would become `cviki_1`.
+  """
+
+  @doc """
+  The primary struct for interacting with restriction enzymes
   """
   defstruct blunt?: nil, cut_1: 0, cut_2: 0, cut_3: 0, cut_4: 0, name: "", pattern: ""
   @doc false

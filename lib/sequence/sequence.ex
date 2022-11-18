@@ -14,8 +14,8 @@ defmodule Bio.Sequence do
 
   ## Example
 
-    iex> Bio.Sequence.complement("gatacgt")
-    "ctatgca"
+      iex> Bio.Sequence.complement("gatacgt")
+      "ctatgca"
   """
   def complement(dna) do
     dna
@@ -32,8 +32,8 @@ defmodule Bio.Sequence do
 
   ## Example
 
-    iex> Bio.Sequence.reverse_complement("gatacgt")
-    "acgtatc"
+      iex> Bio.Sequence.reverse_complement("gatacgt")
+      "acgtatc"
   """
   def reverse_complement(dna) do
     dna |> complement() |> String.reverse()

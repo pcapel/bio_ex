@@ -16,9 +16,7 @@ defmodule Mix.Tasks.Bio.Restriction.Download do
   @aliases [p: :email, d: :cache_dir]
 
   def run(inputs) do
-    {opts, _, _} =
-      OptionParser.parse(inputs, aliases: @aliases, strict: @options)
-      |> IO.inspect()
+    {opts, _, _} = OptionParser.parse(inputs, aliases: @aliases, strict: @options)
 
     cache_dir =
       cond do
