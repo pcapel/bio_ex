@@ -1,6 +1,13 @@
 defmodule Bio.Sequence.Mapping do
   @moduledoc """
-  Mappings for various sequences
+  Mappings for various sequences.
+
+  Essentially, if there is a way to map from one encoding to another for a given
+  sequence, it will live here. Including:
+  - DNA
+  - RNA
+  - Amino Acids
+  - etc...
   """
 
   @doc """
@@ -9,7 +16,7 @@ defmodule Bio.Sequence.Mapping do
   ## Example
 
     iex> Map.get(Bio.Sequence.Mapping.nucleotide_to_name, "a")
-    iex> "adenine"
+    "adenine"
   """
   def nucleotide_to_name do
     %{
@@ -27,7 +34,7 @@ defmodule Bio.Sequence.Mapping do
   ## Example
 
     iex> Map.get(Bio.Sequence.Mapping.dna_complement, "a")
-    iex> "t"
+    "t"
 
   """
   def dna_complement do
@@ -45,7 +52,7 @@ defmodule Bio.Sequence.Mapping do
   ## Example
 
     iex> Map.get(Bio.Sequence.Mapping.rna_complement, "u")
-    iex> "a"
+    "a"
 
   """
   def rna_complement do
@@ -64,7 +71,7 @@ defmodule Bio.Sequence.Mapping do
   ## Example
 
     iex> Map.get(Bio.Sequence.Mapping.dna_ambiguous, "b")
-    iex> ["c", "g", "t"]
+    ["c", "g", "t"]
 
   """
   def dna_ambiguous do

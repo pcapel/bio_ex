@@ -26,9 +26,17 @@ defmodule Bio.Restriction do
   given restriction enzyme.
 
   ## Examples
-      "ttagatgagctctcgattagagt"
-       |> Bio.Restriction.digest(Bio.Restriction.Enzymes.bsmbi)
-      > ["ttagatgacgtctcga", "ttagagt"]
+      iex> Bio.Restriction.digest("ttagatgacgtctcgattagagt", Bio.Restriction.Enzyme.bsmbi)
+      ["ttagatgacgtctcg", "attagagt"]
+
+  Currently this will work for enzymes that look back as well:
+
+      iex> Bio.Restriction.digest("ggatgcagatcagacgaggattga", Bio.Restriction.Enzyme.bsp143i)
+      ["ggatgc", "agatcagacgaggattga"]
+
+  It does not yet work on enzymes that would produce digestions with three parts
+  such as NmeDI, nor will it work on enzymes whose recognition pattern is
+  defined using ambiguous DNA (even simply N).
   """
   def digest(dna, enzyme) do
     _digest("", dna, enzyme)

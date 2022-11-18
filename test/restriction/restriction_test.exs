@@ -207,7 +207,7 @@ defmodule RestrictionTest do
     assert output == expected
   end
 
-  @tag test_group: "perf"
+  @tag group: "perf"
   test "brutally aggressive load test" do
     File.read!("test/5000_x_1000_bp_seqs.txt")
     |> String.split("\n")

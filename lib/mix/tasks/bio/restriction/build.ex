@@ -23,7 +23,9 @@ defmodule Mix.Tasks.Bio.Restriction.Build do
 
   @shortdoc "Task for populating RE data"
   use Mix.Task
-  alias Bio.Ansio, as: Ansio
+  alias Bio.Ansio
+  alias Bio.Rebase.Emboss
+
   @options [cache_dir: :string]
   @aliases [d: :cache_dir]
 
@@ -37,7 +39,7 @@ defmodule Mix.Tasks.Bio.Restriction.Build do
         true -> opts[:cache_dir]
       end
 
-    Bio.Rebase.Emboss.parse(
+    Emboss.parse(
       "#{base_dir}/downloads_emboss_e",
       "#{base_dir}/downloads_emboss_r",
       "#{base_dir}/downloads_emboss_s"
