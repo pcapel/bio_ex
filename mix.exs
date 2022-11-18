@@ -4,6 +4,7 @@ defmodule Bio.MixProject do
   def project do
     [
       app: :bio_ex,
+      description: describe(),
       version: "0.1.0",
       elixir: "~> 1.12",
       start_permanent: Mix.env() == :prod,
@@ -25,8 +26,12 @@ defmodule Bio.MixProject do
 
   defp package() do
     [
-      licenses: ["BSD3"],
+      licenses: ["BSD-3-Clause"],
       links: %{"GitHub" => "https://github.com/pcapel/bio_ex"}
     ]
+  end
+
+  defp describe() do
+    "A bioinformatics project for Elixir."
   end
 end
