@@ -25,19 +25,6 @@ defmodule Bio.MixProject do
 
   defp package() do
     [
-      files: ~w(
-        lib
-        priv
-        .formatter.exs
-        mix.exs
-        README*
-        readme*
-        LICENSE*
-        license*
-        CHANGELOG*
-        changelog*
-        src
-      ),
       licenses: ["BSD3"],
       links: %{"GitHub" => "https://github.com/pcapel/bio_ex"}
     ]
