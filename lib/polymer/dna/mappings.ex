@@ -1,13 +1,9 @@
-defmodule Bio.Sequence.Mapping do
+defmodule Bio.Polymer.Dna.Mappings do
   @moduledoc """
-  Mappings for various sequences.
+  Mappings for DNA
 
-  Essentially, if there is a way to map from one encoding to another for a given
-  sequence, it will live here. Including:
-  - DNA
-  - RNA
-  - Amino Acids
-  - etc...
+  Handles the mapping of the individual code points of "atgc" back to their
+  names, as well as dealing with mapping complementary elements
   """
 
   @doc """
@@ -15,16 +11,15 @@ defmodule Bio.Sequence.Mapping do
 
   ## Example
 
-      iex> Map.get(Bio.Sequence.Mapping.nucleotide_to_name, "a")
+      iex> Map.get(Bio.Polymer.Dna.Mappings.name, "a")
       "adenine"
   """
-  def nucleotide_to_name do
+  def name do
     %{
       "a" => "adenine",
       "c" => "cytosine",
       "g" => "guanine",
-      "t" => "thymine",
-      "u" => "uracil"
+      "t" => "thymine"
     }
   end
 
@@ -33,11 +28,11 @@ defmodule Bio.Sequence.Mapping do
 
   ## Example
 
-      iex> Map.get(Bio.Sequence.Mapping.dna_complement, "a")
+      iex> Map.get(Bio.Polymer.Dna.Mappings.complement, "a")
       "t"
 
   """
-  def dna_complement do
+  def complement do
     %{
       "a" => "t",
       "c" => "g",
@@ -47,34 +42,16 @@ defmodule Bio.Sequence.Mapping do
   end
 
   @doc """
-  Mapping RNA nucleotides to their complements
-
-  ## Example
-
-      iex> Map.get(Bio.Sequence.Mapping.rna_complement, "u")
-      "a"
-
-  """
-  def rna_complement do
-    %{
-      "a" => "u",
-      "c" => "g",
-      "g" => "c",
-      "u" => "a"
-    }
-  end
-
-  @doc """
   Mapping DNA nucleotides to their complements, where their complements are
   defined as a list of accepted nucleotides.
 
   ## Example
 
-      iex> Map.get(Bio.Sequence.Mapping.dna_ambiguous, "b")
+      iex> Map.get(Bio.Polymer.Dna.Mappings.ambiguous, "b")
       ["c", "g", "t"]
 
   """
-  def dna_ambiguous do
+  def ambiguous do
     %{
       "r" => ["a", "g"],
       "y" => ["c", "t"],
